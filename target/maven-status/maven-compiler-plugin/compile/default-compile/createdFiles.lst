@@ -1,0 +1,5 @@
+gob/pe/devida/ppptcd/PpptcdApplication.class
+gob/pe/devida/ppptcd/config/SecurityConfig.class
+gob/pe/devida/ppptcd/controller/IndexController.class
+gob/pe/devida/ppptcd/config/SwaggerConfig.class
+gob/pe/devida/ppptcd/controller/v1/SettingController.class
