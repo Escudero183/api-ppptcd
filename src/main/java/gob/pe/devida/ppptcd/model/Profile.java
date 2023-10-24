@@ -19,4 +19,6 @@ public class Profile {
     private Integer idProfile;
 
     private String name;
+
+    private boolean status;
 }

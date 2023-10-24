@@ -1,8 +1,7 @@
 package gob.pe.devida.ppptcd.service;
 
-import gob.pe.devida.ppptcd.model.EducationalInstitution;
-import gob.pe.devida.ppptcd.model.EducationalInstitution;
-import gob.pe.devida.ppptcd.repository.EducationalInstitutionRepository;
+import gob.pe.devida.ppptcd.model.TypeRiskPlace;
+import gob.pe.devida.ppptcd.repository.TypeRiskPlaceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,32 +14,33 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * File created by Linygn Escudero$ on 17/10/2023$
+ * File created by Linygn Escudero$ on 24/10/2023$
  */
+
 @Service
-public class EducationalInstitutionService {
-
+public class TypeRiskPlaceService {
+    
     @Autowired
-    private EducationalInstitutionRepository educationalInstitutionRepository;
+    private TypeRiskPlaceRepository typeRiskPlaceRepository;
 
-    public EducationalInstitution insert(EducationalInstitution item) {
-        return educationalInstitutionRepository.save(item);
+    public TypeRiskPlace insert(TypeRiskPlace item) {
+        return typeRiskPlaceRepository.save(item);
     }
 
-    public List<EducationalInstitution> findAll() {
-        return educationalInstitutionRepository.findAll();
+    public List<TypeRiskPlace> findAll() {
+        return typeRiskPlaceRepository.findAll();
     }
 
-    public List<EducationalInstitution> findAll(String query, String sortBy) {
+    public List<TypeRiskPlace> findAll(String query, String sortBy) {
         Sort sort;
         if (!sortBy.equals("")) {
             String sortColumn = sortBy.split("\\|")[0];
             String sortDirection = sortBy.split("\\|")[1].toUpperCase();
             sort = Sort.by(sortDirection.equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC, sortColumn);
         } else {
-            sort = Sort.by(Sort.Direction.ASC, "idEducationalInstitution");
+            sort = Sort.by(Sort.Direction.ASC, "idTypeRiskPlace");
         }
-        return educationalInstitutionRepository.findAll("%" + query.toLowerCase() + "%", sort);
+        return typeRiskPlaceRepository.findAll("%" + query.toLowerCase() + "%", sort);
     }
 
     public HashMap<String, Object> findAll(String query, int page, int limit, String sortBy) {
@@ -54,11 +54,11 @@ public class EducationalInstitutionService {
             pageable = PageRequest.of(page - 1, limit, sort);
 
         } else {
-            Sort sort = Sort.by(Sort.Direction.ASC, "idEducationalInstitution");
+            Sort sort = Sort.by(Sort.Direction.ASC, "idTypeRiskPlace");
             pageable = PageRequest.of(page - 1, limit, sort);
 
         }
-        Page<EducationalInstitution> data = educationalInstitutionRepository.findAllParams("%" + query.toLowerCase() + "%", pageable);
+        Page<TypeRiskPlace> data = typeRiskPlaceRepository.findAllParams("%" + query.toLowerCase() + "%", pageable);
         if (!data.getContent().isEmpty()) {
             result.put("items", data.getContent());
         } else {
@@ -72,15 +72,15 @@ public class EducationalInstitutionService {
         return result;
     }
 
-    public EducationalInstitution findById(Integer id) {
-        return educationalInstitutionRepository.findById(id).orElse(null);
+    public TypeRiskPlace findById(Integer id) {
+        return typeRiskPlaceRepository.findById(id).orElse(null);
     }
 
-    public void update(EducationalInstitution item) {
-        educationalInstitutionRepository.save(item);
+    public void update(TypeRiskPlace item) {
+        typeRiskPlaceRepository.save(item);
     }
 
-    public void delete(EducationalInstitution item) {
-        educationalInstitutionRepository.save(item);
+    public void delete(TypeRiskPlace item) {
+        typeRiskPlaceRepository.save(item);
     }
 }

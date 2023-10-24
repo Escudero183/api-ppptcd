@@ -1,8 +1,7 @@
 package gob.pe.devida.ppptcd.service;
 
-import gob.pe.devida.ppptcd.model.EducationalInstitution;
-import gob.pe.devida.ppptcd.model.EducationalInstitution;
-import gob.pe.devida.ppptcd.repository.EducationalInstitutionRepository;
+import gob.pe.devida.ppptcd.model.Institution;
+import gob.pe.devida.ppptcd.repository.InstitutionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,35 +14,36 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * File created by Linygn Escudero$ on 17/10/2023$
+ * File created by Linygn Escudero$ on 24/10/2023$
  */
+
 @Service
-public class EducationalInstitutionService {
-
+public class InstitutionService {
+    
     @Autowired
-    private EducationalInstitutionRepository educationalInstitutionRepository;
+    private InstitutionRepository institutionRepository;
 
-    public EducationalInstitution insert(EducationalInstitution item) {
-        return educationalInstitutionRepository.save(item);
+    public Institution insert(Institution item) {
+        return institutionRepository.save(item);
     }
 
-    public List<EducationalInstitution> findAll() {
-        return educationalInstitutionRepository.findAll();
+    public List<Institution> findAll() {
+        return institutionRepository.findAll();
     }
 
-    public List<EducationalInstitution> findAll(String query, String sortBy) {
+    public List<Institution> findAll(Integer idTypeInstitution, String query, String sortBy) {
         Sort sort;
         if (!sortBy.equals("")) {
             String sortColumn = sortBy.split("\\|")[0];
             String sortDirection = sortBy.split("\\|")[1].toUpperCase();
             sort = Sort.by(sortDirection.equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC, sortColumn);
         } else {
-            sort = Sort.by(Sort.Direction.ASC, "idEducationalInstitution");
+            sort = Sort.by(Sort.Direction.ASC, "idInstitution");
         }
-        return educationalInstitutionRepository.findAll("%" + query.toLowerCase() + "%", sort);
+        return institutionRepository.findAll("%" + query.toLowerCase() + "%", idTypeInstitution, sort);
     }
 
-    public HashMap<String, Object> findAll(String query, int page, int limit, String sortBy) {
+    public HashMap<String, Object> findAll(Integer idTypeInstitution, String query, int page, int limit, String sortBy) {
         HashMap<String, Object> result = new HashMap<String, Object>();
         Pageable pageable;
         if (!sortBy.equals("")) {
@@ -54,11 +54,11 @@ public class EducationalInstitutionService {
             pageable = PageRequest.of(page - 1, limit, sort);
 
         } else {
-            Sort sort = Sort.by(Sort.Direction.ASC, "idEducationalInstitution");
+            Sort sort = Sort.by(Sort.Direction.ASC, "idInstitution");
             pageable = PageRequest.of(page - 1, limit, sort);
 
         }
-        Page<EducationalInstitution> data = educationalInstitutionRepository.findAllParams("%" + query.toLowerCase() + "%", pageable);
+        Page<Institution> data = institutionRepository.findAllParams("%" + query.toLowerCase() + "%", idTypeInstitution, pageable);
         if (!data.getContent().isEmpty()) {
             result.put("items", data.getContent());
         } else {
@@ -72,15 +72,15 @@ public class EducationalInstitutionService {
         return result;
     }
 
-    public EducationalInstitution findById(Integer id) {
-        return educationalInstitutionRepository.findById(id).orElse(null);
+    public Institution findById(Integer id) {
+        return institutionRepository.findById(id).orElse(null);
     }
 
-    public void update(EducationalInstitution item) {
-        educationalInstitutionRepository.save(item);
+    public void update(Institution item) {
+        institutionRepository.save(item);
     }
 
-    public void delete(EducationalInstitution item) {
-        educationalInstitutionRepository.save(item);
+    public void delete(Institution item) {
+        institutionRepository.save(item);
     }
 }
