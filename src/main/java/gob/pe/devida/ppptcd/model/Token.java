@@ -18,7 +18,6 @@ import javax.persistence.*;
 public class Token {
     private static final long serialVersionUID = 1L;
     @Id
-    @Column(name = "token_id")
     @SequenceGenerator(name = "token_generator_seq", sequenceName = "security.token_id_token_seq", allocationSize = 1)
     @GeneratedValue(generator = "token_generator_seq", strategy = GenerationType.SEQUENCE)
     private Integer idToken;

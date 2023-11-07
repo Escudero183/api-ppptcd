@@ -12,7 +12,7 @@ import java.util.Collection;
 public class JwtUser implements UserDetails {
     private static final long serialVersionUID = 1L;
     private final Integer id;
-    private final String username;
+    private final String fullName;
     private final String email;
 
     private final String login;
@@ -21,14 +21,17 @@ public class JwtUser implements UserDetails {
     private final String display;
     private final Collection<? extends GrantedAuthority> authorities;
 
+    private final boolean status;
 
-    public JwtUser(Integer id, String username, String email, String login, String password, String display, Collection<? extends GrantedAuthority> authorities) {
+
+    public JwtUser(Integer id, String fullName, String email, String login, String password, String display, boolean enabled, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
-        this.username = username;
+        this.fullName = fullName;
         this.email = email;
         this.login = login;
         this.password = password;
         this.display = display;
+        this.status = enabled;
         this.authorities = authorities;
     }
 
@@ -37,8 +40,10 @@ public class JwtUser implements UserDetails {
     }
 
     public String getUsername() {
-        return username;
+        return login;
     }
+
+    public String getFullName() { return fullName; }
 
     public String getEmail() {
         return email;
@@ -82,6 +87,6 @@ public class JwtUser implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return status;
     }
 }

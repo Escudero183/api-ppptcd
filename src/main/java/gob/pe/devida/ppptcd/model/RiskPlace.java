@@ -36,7 +36,9 @@ public class RiskPlace {
 
     private boolean status;
 
-    private Integer idInstitution;
+    private Integer idEducationalInstitution;
+
+    private Integer idUser;
 
     @ManyToOne
     @JoinColumn(name = "id_type_risk_place")

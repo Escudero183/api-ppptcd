@@ -5,6 +5,7 @@ import gob.pe.devida.ppptcd.model.Institution;
 import gob.pe.devida.ppptcd.model.RiskPlace;
 import gob.pe.devida.ppptcd.service.RiskPlaceService;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,7 +27,7 @@ public class PpptcdController {
     @Autowired
     private RiskPlaceService riskPlaceService;
 
-    @ApiOperation(value = "Lista todas las lugares de riesgo"/*, authorizations = {@Authorization(value = "apiKey") }*/)
+    @ApiOperation(value = "Lista todas las lugares de riesgo", authorizations = {@Authorization(value = "apiKey") })
     @GetMapping(value = "/risk_place")
     public ResponseEntity<?> findAllRiskPlace(
             @RequestParam(value = "registrationStatus", required = false, defaultValue = "") String registrationStatus,
@@ -55,7 +56,7 @@ public class PpptcdController {
         }
     }
 
-    @ApiOperation(value = "Crea un lugar de riesgo"/*, authorizations = {@Authorization(value = "apiKey") }*/)
+    @ApiOperation(value = "Crea un lugar de riesgo", authorizations = {@Authorization(value = "apiKey") })
     @PostMapping(value = "/risk_place")
     public ResponseEntity<?> saveRiskPlace(@RequestBody RiskPlace data, HttpServletRequest request) {
         HashMap<String, Object> response = new HashMap<>();
@@ -69,14 +70,14 @@ public class PpptcdController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Actualiza un lugar de riesgo"/*, authorizations = { @Authorization(value = "apiKey")}*/)
+    @ApiOperation(value = "Actualiza un lugar de riesgo", authorizations = { @Authorization(value = "apiKey")})
     @PutMapping(value = "/risk_place")
     public ResponseEntity<?> updateRiskPlace (@RequestBody RiskPlace data, HttpServletRequest request) {
         HashMap<String, Object> result = new HashMap<>();
-        RiskPlace dataInDB = riskPlaceService.findById(data.getIdInstitution());
+        RiskPlace dataInDB = riskPlaceService.findById(data.getIdRiskPlace());
         if(dataInDB == null) {
             result.put("success", false);
-            result.put("message", "No existe lugar de riesgo con código: " + data.getIdInstitution());
+            result.put("message", "No existe lugar de riesgo con código: " + data.getIdRiskPlace());
             return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
         }
         try {
@@ -92,7 +93,7 @@ public class PpptcdController {
         }
     }
 
-    @ApiOperation(value = "Elimina un lugar de riesgo"/*, authorizations = { @Authorization(value = "apiKey")}*/)
+    @ApiOperation(value = "Elimina un lugar de riesgo", authorizations = { @Authorization(value = "apiKey")})
     @DeleteMapping(value = "/risk_place/{idRiskPlace}")
     public ResponseEntity<?> deleteRiskPlace (@PathVariable(value = "idRiskPlace") Integer idRiskPlace, HttpServletRequest request){
         HashMap<String, Object> result = new HashMap<>();

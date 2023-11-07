@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-    @Query("select u from User u Where upper(u.login)=:login")
+    @Query("select u from User u Where upper(u.login)=:login and u.status = true")
     public User findByLogin(String login);
 
     @Modifying

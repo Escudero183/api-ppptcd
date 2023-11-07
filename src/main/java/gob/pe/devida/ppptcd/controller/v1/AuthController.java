@@ -64,18 +64,16 @@ public class AuthController {
                                          HttpServletRequest request) {
         try {
             authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
-
             UserDetails userDetails = jwtUserDetailService.loadUserByUsername(authenticationRequest.getUsername());
 
             String token;
             if (checkUsuario(((JwtUser) userDetails).getId())) {
                 JwtUser jwtUser = (JwtUser) userDetails;
                 jwtTokenUtil.setExpiration(28800 * 1000L);
-
                 String userAgent = request.getHeader("User-Agent");
                 token = jwtTokenUtil.generateToken(userDetails, userAgent);
 
-                User userBean = userService.findByLogin(jwtUser.getUsername().toUpperCase());
+                User userBean = userService.findByLogin(authenticationRequest.getUsername().toUpperCase());
                 try {
                     InetAddress remoteInetAddress = InetAddress.getByName(request.getRemoteAddr());
                     Token tokenBean = new Token();
