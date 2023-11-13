@@ -10,11 +10,11 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "institution", schema = "setting")
+@Table(name = "institution", schema = "ppptcd")
 public class Institution {
 
     @Id
-    @SequenceGenerator(name = "institution_generator_seq", sequenceName = "setting.institution_id_institution_seq", allocationSize = 1)
+    @SequenceGenerator(name = "institution_generator_seq", sequenceName = "ppptcd.institution_id_institution_seq", allocationSize = 1)
     @GeneratedValue(generator = "institution_generator_seq", strategy = GenerationType.SEQUENCE)
     private Integer idInstitution;
 

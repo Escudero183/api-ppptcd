@@ -14,7 +14,7 @@ import javax.persistence.*;
 public class Ubigeo {
 
     @Id
-    private Integer idUbigeo;
+    private String idUbigeo;
 
     private String description;
 

@@ -10,11 +10,11 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "educational_institution", schema = "setting")
+@Table(name = "educational_institution", schema = "ppptcd")
 public class EducationalInstitution {
 
     @Id
-    @SequenceGenerator(name = "educational_institution_generator_seq", sequenceName = "setting.educational_institution_id_educational_institution_seq", allocationSize = 1)
+    @SequenceGenerator(name = "educational_institution_generator_seq", sequenceName = "ppptcd.educational_institution_id_educational_institution_seq", allocationSize = 1)
     @GeneratedValue(generator = "educational_institution_generator_seq", strategy = GenerationType.SEQUENCE)
     private Integer idEducationalInstitution;
 
@@ -33,6 +33,26 @@ public class EducationalInstitution {
     private String latitude;
 
     private String longitude;
+
+    private String dataEscale;
+
+    private String website;
+
+    private String email;
+
+    private String phone;
+
+    private String additionalData;
+
+    private String directorPhone;
+
+    private String subDirector;
+
+    private String subDirectorPhone;
+
+    private String tutoringCoordinator;
+
+    private String tutoringCoordinatorPhone;
 
     private boolean status;
 

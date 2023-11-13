@@ -21,8 +21,10 @@ gob/pe/devida/ppptcd/repository/TypeInstitutionRepository.class
 gob/pe/devida/ppptcd/model/TypeInstitution.class
 gob/pe/devida/ppptcd/service/InstitutionService.class
 gob/pe/devida/ppptcd/controller/v1/AuthController.class
+gob/pe/devida/ppptcd/controller/v1/ServicesController.class
 gob/pe/devida/ppptcd/model/TypeRiskPlace.class
 gob/pe/devida/ppptcd/config/security/model/JwtUserFactory.class
+gob/pe/devida/ppptcd/utils/StringUtil.class
 gob/pe/devida/ppptcd/repository/TokenRepository.class
 gob/pe/devida/ppptcd/repository/RiskPlaceRepository.class
 gob/pe/devida/ppptcd/config/security/service/AuthService.class
