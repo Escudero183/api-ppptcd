@@ -1,0 +1,9 @@
+.dockerignore
+Dockerfile.prod
+docker-compose-prod.yml
+compose-up-prod
+compose-down-prod
+
+.git
+.idea
+target

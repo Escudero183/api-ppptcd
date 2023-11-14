@@ -1,0 +1,15 @@
+version: "3.7"
+services:
+  api-ppptcd:
+    container_name: api-ppptcd
+    image: api-ppptcd-image:${VERSION}
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    ports:
+      - "18004:8087"
+    environment:
+      - "TZ=America/Lima"
+    restart: always
+    volumes:
+      - /home/ubuntu/REPO/ppptcd:/app/ppptcd:rw

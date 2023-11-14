@@ -1,0 +1,25 @@
+version: '3.7'
+
+services:
+  tomcat:
+    build:
+      context: .
+      dockerfile: dockerfile-tomcat
+    container_name: tomcat-ppptcd-api
+    ports:
+      - 8080:8080
+    volumes:
+      - ./_data/webapps/:/usr/local/webapps
+      - ./_data/temp/:/usr/local/tomcat/temp
+      - ./_data/logs/:/usr/local/tomcat/logs
+    networks:
+      tomcat_net:
+        aliases:
+          - tomcat-host
+volumes:
+  _data: {}
+networks:
+  tomcat_net:
+    driver: bridge
+    ipam:
+      driver: default

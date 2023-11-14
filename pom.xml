@@ -11,7 +11,7 @@
     <groupId>gob.pe.devida</groupId>
     <artifactId>ppptcd</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>ppptcd</name>
     <description>ApiRest Proyecto PPPTCD</description>
     <properties>
