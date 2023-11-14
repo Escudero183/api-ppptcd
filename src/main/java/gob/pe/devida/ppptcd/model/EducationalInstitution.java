@@ -1,8 +1,10 @@
 package gob.pe.devida.ppptcd.model;
 
 import lombok.Data;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * File created by Linygn Escudero$ on 17/10/2023$
@@ -44,16 +46,13 @@ public class EducationalInstitution {
 
     private String additionalData;
 
-    private String directorPhone;
-
-    private String subDirector;
-
-    private String subDirectorPhone;
-
-    private String tutoringCoordinator;
-
-    private String tutoringCoordinatorPhone;
-
     private boolean status;
+
+    @Transient
+    private IUbigeo ubigeoAll;
+
+    @OneToMany(mappedBy = "idEducationalInstitution")
+    @Where(clause = "status = true")
+    private List<EducationalInstitutionDirectory> directorio;
 
 }

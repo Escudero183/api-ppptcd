@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class EducationalInstitutionDirectory {
 
     @Id
-    @SequenceGenerator(name = "educational_institution_directory_generator_seq", sequenceName = "ppptcd.educational_institution_id_educational_institution_seq", allocationSize = 1)
+    @SequenceGenerator(name = "educational_institution_directory_generator_seq", sequenceName = "ppptcd.educational_institution_direc_id_educational_institution_di_seq", allocationSize = 1)
     @GeneratedValue(generator = "educational_institution_directory_generator_seq", strategy = GenerationType.SEQUENCE)
     private Integer idEducationalInstitutionDirectory;
 
@@ -23,13 +23,17 @@ public class EducationalInstitutionDirectory {
 
     private String lastNameTwo;
 
+    private String dni;
+
     private String position;
 
     private String phone;
 
+    private String email;
+
+    private String photo;
+
     private boolean status;
 
-    @ManyToOne
-    @JoinColumn(name = "id_educational_institution")
-    private EducationalInstitution educationalInstitution;
+    private Integer idEducationalInstitution;
 }

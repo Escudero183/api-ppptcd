@@ -16,12 +16,12 @@ import java.util.List;
 @Repository
 public interface EducationalInstitutionDirectoryRepository extends JpaRepository<EducationalInstitutionDirectory, Integer> {
 
-    @Query("select t from EducationalInstitutionDirectory t Where t.status = true and (:idEducationalInstitution = -1 or (:idEducationalInstitution != -1 and (t.educationalInstitution.idEducationalInstitution = :idEducationalInstitution))) and (lower(t.firstName) like :query or lower(t.lastNameOne) like :query or lower(t.lastNameTwo) like :query)")
+    @Query("select t from EducationalInstitutionDirectory t Where t.status = true and (:idEducationalInstitution = -1 or (:idEducationalInstitution != -1 and (t.idEducationalInstitution = :idEducationalInstitution))) and (lower(t.firstName) like :query or lower(t.lastNameOne) like :query or lower(t.lastNameTwo) like :query)")
     public Page<EducationalInstitutionDirectory> findAllParams(Integer idEducationalInstitution, String query, Pageable pageable);
 
-    @Query("select t from EducationalInstitutionDirectory t Where t.status = true and (:idEducationalInstitution = -1 or (:idEducationalInstitution != -1 and (t.educationalInstitution.idEducationalInstitution = :idEducationalInstitution))) and (lower(t.firstName) like :query or lower(t.lastNameOne) like :query or lower(t.lastNameTwo) like :query)")
+    @Query("select t from EducationalInstitutionDirectory t Where t.status = true and (:idEducationalInstitution = -1 or (:idEducationalInstitution != -1 and (t.idEducationalInstitution = :idEducationalInstitution))) and (lower(t.firstName) like :query or lower(t.lastNameOne) like :query or lower(t.lastNameTwo) like :query)")
     public List<EducationalInstitutionDirectory> findAll(Integer idEducationalInstitution, String query);
 
-    @Query("select t from EducationalInstitutionDirectory t Where t.status = true and (:idEducationalInstitution = -1 or (:idEducationalInstitution != -1 and (t.educationalInstitution.idEducationalInstitution = :idEducationalInstitution))) and (lower(t.firstName) like :query or lower(t.lastNameOne) like :query or lower(t.lastNameTwo) like :query)")
+    @Query("select t from EducationalInstitutionDirectory t Where t.status = true and (:idEducationalInstitution = -1 or (:idEducationalInstitution != -1 and (t.idEducationalInstitution = :idEducationalInstitution))) and (lower(t.firstName) like :query or lower(t.lastNameOne) like :query or lower(t.lastNameTwo) like :query)")
     public List<EducationalInstitutionDirectory> findAll(Integer idEducationalInstitution, String query, Sort sort);
 }
