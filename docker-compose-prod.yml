@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: Dockerfile.prod
     ports:
-      - "18004:8087"
+      - "18018:8087"
     environment:
       - "TZ=America/Lima"
     restart: always
