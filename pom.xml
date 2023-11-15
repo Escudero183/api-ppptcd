@@ -10,12 +10,12 @@
     </parent>
     <groupId>gob.pe.devida</groupId>
     <artifactId>ppptcd</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
     <packaging>jar</packaging>
-    <name>ppptcd</name>
+    <name>api-ppptcd</name>
     <description>ApiRest Proyecto PPPTCD</description>
     <properties>
-        <java.version>11</java.version>
+        <java.version>1.8</java.version>
         <swagger.version>2.9.2</swagger.version>
     </properties>
     <dependencies>

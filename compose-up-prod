@@ -1,2 +1,2 @@
 #!/bin/bash
-sudo docker compose -f docker-compose-prod.yml -p api-ppptcd up -d
+docker compose -f docker-compose-prod.yml -p api-ppptcd up -d
