@@ -1,14 +1,8 @@
 package gob.pe.devida.ppptcd.controller.v1;
 
 import gob.pe.devida.ppptcd.config.exception.ApiPPPTCDException;
-import gob.pe.devida.ppptcd.model.EducationalInstitution;
-import gob.pe.devida.ppptcd.model.EducationalInstitutionDirectory;
-import gob.pe.devida.ppptcd.model.Institution;
-import gob.pe.devida.ppptcd.model.RiskPlace;
-import gob.pe.devida.ppptcd.service.EducationalInstitutionDirectoryService;
-import gob.pe.devida.ppptcd.service.EducationalInstitutionService;
-import gob.pe.devida.ppptcd.service.InstitutionService;
-import gob.pe.devida.ppptcd.service.RiskPlaceService;
+import gob.pe.devida.ppptcd.model.*;
+import gob.pe.devida.ppptcd.service.*;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +34,9 @@ public class PpptcdController {
 
     @Autowired
     private InstitutionService institutionService;
+
+    @Autowired
+    private InstitutionDirectoryService institutionDirectoryService;
 
     @ApiOperation(value = "Lista todas las lugares de riesgo", authorizations = {@Authorization(value = "apiKey") })
     @GetMapping(value = "/risk_place")
@@ -386,6 +383,95 @@ public class PpptcdController {
         try {
             dataInDB.setStatus(false);
             institutionService.delete(dataInDB);
+            result.put("success", true);
+            result.put("message", "Se ha eliminado los datos del registro.");
+            result.put("result", dataInDB);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+
+        } catch (Exception ex) {
+            return new ResponseEntity<>(new ApiPPPTCDException(ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @ApiOperation(value = "Lista directorio de instituciones aliadas", authorizations = {@Authorization(value = "apiKey") })
+    @GetMapping(value = "/institution_directory")
+    public ResponseEntity<?> findAllInstitutionDirectory(
+            @RequestParam(value = "idInstitution", required = false, defaultValue = "-1") Integer idInstitution,
+            @RequestParam(value = "type", required = false, defaultValue = "grilla") String type,
+            @RequestParam(value = "query", required = false, defaultValue = "") String query,
+            @RequestParam(value = "page", required = false, defaultValue = "-1") int page,
+            @RequestParam(value = "limit", required = false, defaultValue = "-1") int limit,
+            @RequestParam(value = "sortBy", required = false, defaultValue = "") String sortBy,
+            HttpServletRequest request) {
+
+        if(type.equals("grilla")) {
+            int maxPage = 10;
+
+            if (page == -1 && limit == -1 && "".equals(sortBy)) {
+                page = 1;
+                limit = maxPage;
+            }else if (limit != -1 && page == -1) {
+                page = 1;
+            } else if (page != -1 && limit == -1) {
+                limit = maxPage;
+            }
+
+            return new ResponseEntity<>(institutionDirectoryService.findAll(idInstitution, query, page, limit, sortBy), HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(institutionDirectoryService.findAll(idInstitution, query, sortBy), HttpStatus.OK);
+        }
+    }
+
+    @ApiOperation(value = "Crea una nueva persona en directorio de institución aliada", authorizations = {@Authorization(value = "apiKey") })
+    @PostMapping(value = "/institution_directory")
+    public ResponseEntity<?> saveInstitutionDirectory(@RequestBody InstitutionDirectory data, HttpServletRequest request) {
+        HashMap<String, Object> response = new HashMap<>();
+        data.setStatus(true);
+        InstitutionDirectory result = institutionDirectoryService.insert(data);
+
+
+        response.put("success", true);
+        response.put("message", "Se ha registrado correctamente.");
+        response.put("result", result);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Actualiza una persona en directorio de institución aliada", authorizations = { @Authorization(value = "apiKey")})
+    @PutMapping(value = "/institution_directory")
+    public ResponseEntity<?> updateInstitutionDirectory (@RequestBody InstitutionDirectory data, HttpServletRequest request) {
+        HashMap<String, Object> result = new HashMap<>();
+        InstitutionDirectory dataInDB = institutionDirectoryService.findById(data.getIdInstitutionDirectory());
+        if(dataInDB == null) {
+            result.put("success", false);
+            result.put("message", "No existe registro en directorio de institución aliada con código: " + data.getIdInstitutionDirectory());
+            return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+        }
+        try {
+            data.setStatus(true);
+            institutionDirectoryService.update(data);
+            result.put("success", true);
+            result.put("message", "Se ha actualizado los datos del registro.");
+            result.put("result", data);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+
+        } catch (Exception ex) {
+            return new ResponseEntity<>(new ApiPPPTCDException(ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @ApiOperation(value = "Elimina persona de directorio de institución aliada", authorizations = { @Authorization(value = "apiKey")})
+    @DeleteMapping(value = "/institution_directory/{idInstitutionDirectory}")
+    public ResponseEntity<?> deleteInstitutionDirectory (@PathVariable(value = "idInstitutionDirectory") Integer idInstitutionDirectory, HttpServletRequest request){
+        HashMap<String, Object> result = new HashMap<>();
+        InstitutionDirectory dataInDB = institutionDirectoryService.findById(idInstitutionDirectory);
+        if(dataInDB == null) {
+            result.put("success", false);
+            result.put("message", "No existe registro en directorio de institución aliada con código: " + idInstitutionDirectory);
+            return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+        }
+        try {
+            dataInDB.setStatus(false);
+            institutionDirectoryService.delete(dataInDB);
             result.put("success", true);
             result.put("message", "Se ha eliminado los datos del registro.");
             result.put("result", dataInDB);

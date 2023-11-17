@@ -12,6 +12,7 @@ gob/pe/devida/ppptcd/service/InstitutionService.class
 gob/pe/devida/ppptcd/controller/v1/AuthController.class
 gob/pe/devida/ppptcd/controller/v1/ServicesController.class
 gob/pe/devida/ppptcd/model/TypeRiskPlace.class
+gob/pe/devida/ppptcd/model/InstitutionDirectory.class
 gob/pe/devida/ppptcd/config/security/service/AuthService.class
 gob/pe/devida/ppptcd/model/IUbigeo.class
 gob/pe/devida/ppptcd/model/User.class

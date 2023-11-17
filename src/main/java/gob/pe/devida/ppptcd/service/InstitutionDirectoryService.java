@@ -1,7 +1,8 @@
 package gob.pe.devida.ppptcd.service;
 
 import gob.pe.devida.ppptcd.model.EducationalInstitutionDirectory;
-import gob.pe.devida.ppptcd.repository.EducationalInstitutionDirectoryRepository;
+import gob.pe.devida.ppptcd.model.InstitutionDirectory;
+import gob.pe.devida.ppptcd.repository.InstitutionDirectoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,35 +15,35 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * File created by Linygn Escudero$ on 12/11/2023$
+ * File created by Linygn Escudero$ on 16/11/2023$
  */
 @Service
-public class EducationalInstitutionDirectoryService {
+public class InstitutionDirectoryService {
 
     @Autowired
-    private EducationalInstitutionDirectoryRepository educationalInstitutionDirectoryRepository;
+    private InstitutionDirectoryRepository institutionDirectoryRepository;
 
-    public EducationalInstitutionDirectory insert(EducationalInstitutionDirectory item) {
-        return educationalInstitutionDirectoryRepository.save(item);
+    public InstitutionDirectory insert(InstitutionDirectory item) {
+        return institutionDirectoryRepository.save(item);
     }
 
-    public List<EducationalInstitutionDirectory> findAll() {
-        return educationalInstitutionDirectoryRepository.findAll();
+    public List<InstitutionDirectory> findAll() {
+        return institutionDirectoryRepository.findAll();
     }
 
-    public List<EducationalInstitutionDirectory> findAll(Integer idEducationalInstitution, String query, String sortBy) {
+    public List<InstitutionDirectory> findAll(Integer idInstitution, String query, String sortBy) {
         Sort sort;
         if (!sortBy.equals("")) {
             String sortColumn = sortBy.split("\\|")[0];
             String sortDirection = sortBy.split("\\|")[1].toUpperCase();
             sort = Sort.by(sortDirection.equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC, sortColumn);
         } else {
-            sort = Sort.by(Sort.Direction.ASC, "idEducationalInstitutionDirectory");
+            sort = Sort.by(Sort.Direction.ASC, "idInstitutionDirectory");
         }
-        return educationalInstitutionDirectoryRepository.findAll(idEducationalInstitution, "%" + query.toLowerCase() + "%", sort);
+        return institutionDirectoryRepository.findAll(idInstitution, "%" + query.toLowerCase() + "%", sort);
     }
 
-    public HashMap<String, Object> findAll(Integer idEducationalInstitution, String query, int page, int limit, String sortBy) {
+    public HashMap<String, Object> findAll(Integer idInstitution, String query, int page, int limit, String sortBy) {
         HashMap<String, Object> result = new HashMap<String, Object>();
         Pageable pageable;
         if (!sortBy.equals("")) {
@@ -53,11 +54,11 @@ public class EducationalInstitutionDirectoryService {
             pageable = PageRequest.of(page - 1, limit, sort);
 
         } else {
-            Sort sort = Sort.by(Sort.Direction.ASC, "idEducationalInstitutionDirectory");
+            Sort sort = Sort.by(Sort.Direction.ASC, "idInstitutionDirectory");
             pageable = PageRequest.of(page - 1, limit, sort);
 
         }
-        Page<EducationalInstitutionDirectory> data = educationalInstitutionDirectoryRepository.findAllParams(idEducationalInstitution, "%" + query.toLowerCase() + "%", pageable);
+        Page<InstitutionDirectory> data = institutionDirectoryRepository.findAllParams(idInstitution, "%" + query.toLowerCase() + "%", pageable);
         if (!data.getContent().isEmpty()) {
             result.put("items", data.getContent());
         } else {
@@ -71,15 +72,15 @@ public class EducationalInstitutionDirectoryService {
         return result;
     }
 
-    public EducationalInstitutionDirectory findById(Integer id) {
-        return educationalInstitutionDirectoryRepository.findById(id).orElse(null);
+    public InstitutionDirectory findById(Integer id) {
+        return institutionDirectoryRepository.findById(id).orElse(null);
     }
 
-    public void update(EducationalInstitutionDirectory item) {
-        educationalInstitutionDirectoryRepository.save(item);
+    public void update(InstitutionDirectory item) {
+        institutionDirectoryRepository.save(item);
     }
 
-    public void delete(EducationalInstitutionDirectory item) {
-        educationalInstitutionDirectoryRepository.save(item);
+    public void delete(InstitutionDirectory item) {
+        institutionDirectoryRepository.save(item);
     }
 }

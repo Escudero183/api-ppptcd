@@ -1,7 +1,9 @@
 package gob.pe.devida.ppptcd.service;
 
+import gob.pe.devida.ppptcd.model.EducationalInstitution;
 import gob.pe.devida.ppptcd.model.Institution;
 import gob.pe.devida.ppptcd.repository.InstitutionRepository;
+import gob.pe.devida.ppptcd.repository.UbigeoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +24,9 @@ public class InstitutionService {
     
     @Autowired
     private InstitutionRepository institutionRepository;
+
+    @Autowired
+    private UbigeoRepository ubigeoRepository;
 
     public Institution insert(Institution item) {
         return institutionRepository.save(item);
@@ -60,6 +65,9 @@ public class InstitutionService {
         }
         Page<Institution> data = institutionRepository.findAllParams("%" + query.toLowerCase() + "%", idTypeInstitution, pageable);
         if (!data.getContent().isEmpty()) {
+            for(Institution ia : data) {
+                ia.setUbigeoAll(ubigeoRepository.getUbigeoFull(ia.getUbigeo()));
+            }
             result.put("items", data.getContent());
         } else {
             result.put("items", new ArrayList<>());

@@ -1,8 +1,10 @@
 package gob.pe.devida.ppptcd.model;
 
 import lombok.Data;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * File created by Linygn Escudero$ on 18/10/2023$
@@ -30,8 +32,15 @@ public class Institution {
 
     private boolean status;
 
+    @Transient
+    private IUbigeo ubigeoAll;
+
     @ManyToOne
     @JoinColumn(name = "id_type_institution")
     private TypeInstitution typeInstitution;
+
+    @OneToMany(mappedBy = "idInstitution")
+    @Where(clause = "status = true")
+    private List<InstitutionDirectory> directorio;
 
 }

@@ -22,6 +22,8 @@ public class TypeInstitution {
 
     private String abbreviation;
 
+    private String positions;
+
     private boolean status;
 
 }
