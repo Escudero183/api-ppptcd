@@ -5,6 +5,7 @@ gob/pe/devida/ppptcd/model/RiskPlace.class
 gob/pe/devida/ppptcd/model/Token.class
 gob/pe/devida/ppptcd/repository/EducationalInstitutionRepository.class
 gob/pe/devida/ppptcd/config/security/service/SecurityService.class
+gob/pe/devida/ppptcd/repository/InstitutionDirectoryRepository.class
 gob/pe/devida/ppptcd/config/security/token/JwtTokenUtil.class
 gob/pe/devida/ppptcd/filter/JwtAuthorizationTokenFilter.class
 gob/pe/devida/ppptcd/config/exception/RestException.class
@@ -35,6 +36,7 @@ gob/pe/devida/ppptcd/config/security/model/JwtUserFactory.class
 gob/pe/devida/ppptcd/utils/StringUtil.class
 gob/pe/devida/ppptcd/repository/TokenRepository.class
 gob/pe/devida/ppptcd/repository/EducationalInstitutionDirectoryRepository.class
+gob/pe/devida/ppptcd/service/InstitutionDirectoryService.class
 gob/pe/devida/ppptcd/repository/RiskPlaceRepository.class
 gob/pe/devida/ppptcd/model/Institution.class
 gob/pe/devida/ppptcd/service/EducationalInstitutionDirectoryService.class

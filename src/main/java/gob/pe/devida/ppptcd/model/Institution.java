@@ -28,6 +28,8 @@ public class Institution {
 
     private String phone;
 
+    private String email;
+
     private String additionalData;
 
     private boolean status;
