@@ -55,4 +55,8 @@ public class EducationalInstitution {
     @Where(clause = "status = true")
     private List<EducationalInstitutionDirectory> directorio;
 
+    @OneToMany(mappedBy = "idEducationalInstitution")
+    @Where(clause = "status = true")
+    private List<RiskPlace> riskPlaces;
+
 }

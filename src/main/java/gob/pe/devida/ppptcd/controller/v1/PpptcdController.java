@@ -1,6 +1,8 @@
 package gob.pe.devida.ppptcd.controller.v1;
 
 import gob.pe.devida.ppptcd.config.exception.ApiPPPTCDException;
+import gob.pe.devida.ppptcd.config.exception.RestException;
+import gob.pe.devida.ppptcd.config.security.model.JwtUser;
 import gob.pe.devida.ppptcd.model.*;
 import gob.pe.devida.ppptcd.service.*;
 import io.swagger.annotations.ApiOperation;
@@ -9,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -71,6 +76,17 @@ public class PpptcdController {
     @PostMapping(value = "/risk_place")
     public ResponseEntity<?> saveRiskPlace(@RequestBody RiskPlace data, HttpServletRequest request) {
         HashMap<String, Object> response = new HashMap<>();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Integer idUser = 0;
+        if (!(auth instanceof AnonymousAuthenticationToken)) {
+            JwtUser userDetails = (JwtUser) auth.getPrincipal();
+            idUser = userDetails.getId();
+
+        } else {
+            return new ResponseEntity<>(new RestException("No Autorizado"), HttpStatus.UNAUTHORIZED);
+        }
+
+        data.setIdUser(idUser);
         data.setStatus(true);
         RiskPlace result = riskPlaceService.insert(data);
 

@@ -40,6 +40,9 @@ public class RiskPlace {
 
     private Integer idUser;
 
+    @Transient
+    private IUbigeo ubigeoAll;
+
     @ManyToOne
     @JoinColumn(name = "id_type_risk_place")
     private TypeRiskPlace typeRiskPlace;

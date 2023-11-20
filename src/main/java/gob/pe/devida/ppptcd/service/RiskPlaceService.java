@@ -1,7 +1,9 @@
 package gob.pe.devida.ppptcd.service;
 
+import gob.pe.devida.ppptcd.model.EducationalInstitution;
 import gob.pe.devida.ppptcd.model.RiskPlace;
 import gob.pe.devida.ppptcd.repository.RiskPlaceRepository;
+import gob.pe.devida.ppptcd.repository.UbigeoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +24,9 @@ public class RiskPlaceService {
     
     @Autowired
     private RiskPlaceRepository riskPlaceRepository;
+
+    @Autowired
+    private UbigeoRepository ubigeoRepository;
 
     public RiskPlace insert(RiskPlace item) {
         return riskPlaceRepository.save(item);
@@ -60,6 +65,9 @@ public class RiskPlaceService {
         }
         Page<RiskPlace> data = riskPlaceRepository.findAllParams("%" + query.toLowerCase() + "%", registrationStatus, pageable);
         if (!data.getContent().isEmpty()) {
+            for(RiskPlace ei : data) {
+                ei.setUbigeoAll(ubigeoRepository.getUbigeoFull(ei.getUbigeo()));
+            }
             result.put("items", data.getContent());
         } else {
             result.put("items", new ArrayList<>());
