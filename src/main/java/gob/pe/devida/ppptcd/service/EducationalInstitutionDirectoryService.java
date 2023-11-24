@@ -30,7 +30,7 @@ public class EducationalInstitutionDirectoryService {
         return educationalInstitutionDirectoryRepository.findAll();
     }
 
-    public List<EducationalInstitutionDirectory> findAll(Integer idEducationalInstitution, String query, String sortBy) {
+    public List<EducationalInstitutionDirectory> findAll(Integer idEducationalInstitution, String position, String query, String sortBy) {
         Sort sort;
         if (!sortBy.equals("")) {
             String sortColumn = sortBy.split("\\|")[0];
@@ -39,10 +39,10 @@ public class EducationalInstitutionDirectoryService {
         } else {
             sort = Sort.by(Sort.Direction.ASC, "idEducationalInstitutionDirectory");
         }
-        return educationalInstitutionDirectoryRepository.findAll(idEducationalInstitution, "%" + query.toLowerCase() + "%", sort);
+        return educationalInstitutionDirectoryRepository.findAll(idEducationalInstitution, position, "%" + query.toLowerCase() + "%", sort);
     }
 
-    public HashMap<String, Object> findAll(Integer idEducationalInstitution, String query, int page, int limit, String sortBy) {
+    public HashMap<String, Object> findAll(Integer idEducationalInstitution, String position, String query, int page, int limit, String sortBy) {
         HashMap<String, Object> result = new HashMap<String, Object>();
         Pageable pageable;
         if (!sortBy.equals("")) {
@@ -57,7 +57,7 @@ public class EducationalInstitutionDirectoryService {
             pageable = PageRequest.of(page - 1, limit, sort);
 
         }
-        Page<EducationalInstitutionDirectory> data = educationalInstitutionDirectoryRepository.findAllParams(idEducationalInstitution, "%" + query.toLowerCase() + "%", pageable);
+        Page<EducationalInstitutionDirectory> data = educationalInstitutionDirectoryRepository.findAllParams(idEducationalInstitution, position, "%" + query.toLowerCase() + "%", pageable);
         if (!data.getContent().isEmpty()) {
             result.put("items", data.getContent());
         } else {

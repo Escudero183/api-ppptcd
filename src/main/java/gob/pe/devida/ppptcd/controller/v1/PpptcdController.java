@@ -246,6 +246,7 @@ public class PpptcdController {
     @GetMapping(value = "/educational_institution_directory")
     public ResponseEntity<?> findAllEducationalInstitutionDirectory(
             @RequestParam(value = "idEducationalInstitution", required = false, defaultValue = "-1") Integer idEducationalInstitution,
+            @RequestParam(value = "position", required = false, defaultValue = "") String position,
             @RequestParam(value = "type", required = false, defaultValue = "grilla") String type,
             @RequestParam(value = "query", required = false, defaultValue = "") String query,
             @RequestParam(value = "page", required = false, defaultValue = "-1") int page,
@@ -265,9 +266,9 @@ public class PpptcdController {
                 limit = maxPage;
             }
 
-            return new ResponseEntity<>(educationalInstitutionDirectoryService.findAll(idEducationalInstitution, query, page, limit, sortBy), HttpStatus.OK);
+            return new ResponseEntity<>(educationalInstitutionDirectoryService.findAll(idEducationalInstitution, position, query, page, limit, sortBy), HttpStatus.OK);
         }else {
-            return new ResponseEntity<>(educationalInstitutionDirectoryService.findAll(idEducationalInstitution, query, sortBy), HttpStatus.OK);
+            return new ResponseEntity<>(educationalInstitutionDirectoryService.findAll(idEducationalInstitution, position, query, sortBy), HttpStatus.OK);
         }
     }
 
