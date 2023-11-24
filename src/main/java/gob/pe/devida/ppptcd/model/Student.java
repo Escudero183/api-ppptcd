@@ -71,6 +71,10 @@ public class Student {
     @Transient
     private IUbigeo ubigeoAll;
 
+    @ManyToOne
+    @JoinColumn(name = "idEducationalInstitutionDirectory")
+    private EducationalInstitutionDirectory tutor;
+
     @OneToMany(mappedBy = "idStudent")
     @Where(clause = "status = true")
     private List<Treatment> treatments;
