@@ -17,6 +17,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.HashMap;
 
 /**
@@ -42,6 +44,15 @@ public class PpptcdController {
 
     @Autowired
     private InstitutionDirectoryService institutionDirectoryService;
+
+    @Autowired
+    private StudentService studentService;
+
+    @Autowired
+    private IncidenceService incidenceService;
+
+    @Autowired
+    private TreatmentService treatmentService;
 
     @ApiOperation(value = "Lista todas las lugares de riesgo", authorizations = {@Authorization(value = "apiKey") })
     @GetMapping(value = "/risk_place")
@@ -497,4 +508,313 @@ public class PpptcdController {
             return new ResponseEntity<>(new ApiPPPTCDException(ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @ApiOperation(value = "Lista todos los estudiantes aplicando filtros", authorizations = {@Authorization(value = "apiKey") })
+    @GetMapping(value = "/student")
+    public ResponseEntity<?> findAllStudent(
+            @RequestParam(value = "idEducationalInstitution", required = false, defaultValue = "") Integer idEducationalInstitution,
+            @RequestParam(value = "stateEvolution", required = false, defaultValue = "") String stateEvolution,
+            @RequestParam(value = "sex", required = false, defaultValue = "") String sex,
+            @RequestParam(value = "type", required = false, defaultValue = "grilla") String type,
+            @RequestParam(value = "query", required = false, defaultValue = "") String query,
+            @RequestParam(value = "page", required = false, defaultValue = "-1") Integer page,
+            @RequestParam(value = "limit", required = false, defaultValue = "-1") Integer limit,
+            @RequestParam(value = "sortBy", required = false, defaultValue = "") String sortBy,
+            HttpServletRequest request) {
+
+        if(type.equals("grilla")) {
+            int maxPage = 10;
+
+            if (page == -1 && limit == -1 && "".equals(sortBy)) {
+                page = 1;
+                limit = maxPage;
+            }else if (limit != -1 && page == -1) {
+                page = 1;
+            } else if (page != -1 && limit == -1) {
+                limit = maxPage;
+            }
+
+            return new ResponseEntity<>(studentService.findAll(idEducationalInstitution, stateEvolution, sex, query, page, limit, sortBy), HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(studentService.findAll(idEducationalInstitution, stateEvolution, sex, query, sortBy), HttpStatus.OK);
+        }
+    }
+
+    @ApiOperation(value = "Crea un estudiante", authorizations = {@Authorization(value = "apiKey") })
+    @PostMapping(value = "/student")
+    public ResponseEntity<?> saveStudent(@RequestBody Student data, HttpServletRequest request) {
+        HashMap<String, Object> response = new HashMap<>();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Integer idUser = 0;
+        if (!(auth instanceof AnonymousAuthenticationToken)) {
+            JwtUser userDetails = (JwtUser) auth.getPrincipal();
+            idUser = userDetails.getId();
+
+        } else {
+            return new ResponseEntity<>(new RestException("No Autorizado"), HttpStatus.UNAUTHORIZED);
+        }
+
+        data.setIdUserReport(idUser);
+        data.setRegistrationDate(Date.valueOf(LocalDate.now()));
+        data.setStatus(true);
+        Student result = studentService.insert(data);
+
+
+        response.put("success", true);
+        response.put("message", "Se ha registrado correctamente.");
+        response.put("result", result);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Actualiza un estudiante", authorizations = { @Authorization(value = "apiKey")})
+    @PutMapping(value = "/student")
+    public ResponseEntity<?> updateStudent (@RequestBody Student data, HttpServletRequest request) {
+        HashMap<String, Object> result = new HashMap<>();
+        Student dataInDB = studentService.findById(data.getIdStudent());
+        if(dataInDB == null) {
+            result.put("success", false);
+            result.put("message", "No existe estudiante con código: " + data.getIdStudent());
+            return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+        }
+        try {
+            data.setStatus(true);
+            studentService.update(data);
+            result.put("success", true);
+            result.put("message", "Se ha actualizado los datos del registro.");
+            result.put("result", data);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+
+        } catch (Exception ex) {
+            return new ResponseEntity<>(new ApiPPPTCDException(ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @ApiOperation(value = "Elimina un estudiante", authorizations = { @Authorization(value = "apiKey")})
+    @DeleteMapping(value = "/student/{idStudent}")
+    public ResponseEntity<?> deleteStudent (@PathVariable(value = "idStudent") Integer idStudent, HttpServletRequest request){
+        HashMap<String, Object> result = new HashMap<>();
+        Student dataInDB = studentService.findById(idStudent);
+        if(dataInDB == null) {
+            result.put("success", false);
+            result.put("message", "No existe estudiante con código: " + idStudent);
+            return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+        }
+        try {
+            dataInDB.setStatus(false);
+            studentService.delete(dataInDB);
+            result.put("success", true);
+            result.put("message", "Se ha eliminado los datos del registro.");
+            result.put("result", dataInDB);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+
+        } catch (Exception ex) {
+            return new ResponseEntity<>(new ApiPPPTCDException(ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @ApiOperation(value = "Lista todos las incidencias", authorizations = {@Authorization(value = "apiKey") })
+    @GetMapping(value = "/incidence")
+    public ResponseEntity<?> findAllIncidence(
+            @RequestParam(value = "idStudent", required = false, defaultValue = "") Integer idStudent,
+            @RequestParam(value = "registrationDate", required = false, defaultValue = "") String registrationDate,
+            @RequestParam(value = "type", required = false, defaultValue = "grilla") String type,
+            @RequestParam(value = "query", required = false, defaultValue = "") String query,
+            @RequestParam(value = "page", required = false, defaultValue = "-1") Integer page,
+            @RequestParam(value = "limit", required = false, defaultValue = "-1") Integer limit,
+            @RequestParam(value = "sortBy", required = false, defaultValue = "") String sortBy,
+            HttpServletRequest request) {
+
+        if(type.equals("grilla")) {
+            int maxPage = 10;
+
+            if (page == -1 && limit == -1 && "".equals(sortBy)) {
+                page = 1;
+                limit = maxPage;
+            }else if (limit != -1 && page == -1) {
+                page = 1;
+            } else if (page != -1 && limit == -1) {
+                limit = maxPage;
+            }
+
+            return new ResponseEntity<>(incidenceService.findAll(idStudent, registrationDate, query, page, limit, sortBy), HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(incidenceService.findAll(idStudent, registrationDate, query, sortBy), HttpStatus.OK);
+        }
+    }
+
+    @ApiOperation(value = "Crea una incidencia", authorizations = {@Authorization(value = "apiKey") })
+    @PostMapping(value = "/incidence")
+    public ResponseEntity<?> saveIncidence(@RequestBody Incidence data, HttpServletRequest request) {
+        HashMap<String, Object> response = new HashMap<>();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Integer idUser = 0;
+        if (!(auth instanceof AnonymousAuthenticationToken)) {
+            JwtUser userDetails = (JwtUser) auth.getPrincipal();
+            idUser = userDetails.getId();
+
+        } else {
+            return new ResponseEntity<>(new RestException("No Autorizado"), HttpStatus.UNAUTHORIZED);
+        }
+
+        data.setRegistrationDate(Date.valueOf(LocalDate.now()));
+        data.setStatus(true);
+        Incidence result = incidenceService.insert(data);
+
+
+        response.put("success", true);
+        response.put("message", "Se ha registrado correctamente.");
+        response.put("result", result);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Actualiza una incidencia", authorizations = { @Authorization(value = "apiKey")})
+    @PutMapping(value = "/incidence")
+    public ResponseEntity<?> updateIncidence (@RequestBody Incidence data, HttpServletRequest request) {
+        HashMap<String, Object> result = new HashMap<>();
+        Incidence dataInDB = incidenceService.findById(data.getIdIncidence());
+        if(dataInDB == null) {
+            result.put("success", false);
+            result.put("message", "No existe incidencia con código: " + data.getIdStudent());
+            return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+        }
+        try {
+            data.setStatus(true);
+            incidenceService.update(data);
+            result.put("success", true);
+            result.put("message", "Se ha actualizado los datos del registro.");
+            result.put("result", data);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+
+        } catch (Exception ex) {
+            return new ResponseEntity<>(new ApiPPPTCDException(ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @ApiOperation(value = "Elimina una incidencia", authorizations = { @Authorization(value = "apiKey")})
+    @DeleteMapping(value = "/incidence/{idIncidence}")
+    public ResponseEntity<?> deleteIncidence (@PathVariable(value = "idIncidence") Integer idIncidence, HttpServletRequest request){
+        HashMap<String, Object> result = new HashMap<>();
+        Incidence dataInDB = incidenceService.findById(idIncidence);
+        if(dataInDB == null) {
+            result.put("success", false);
+            result.put("message", "No existe incidencia con código: " + idIncidence);
+            return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+        }
+        try {
+            dataInDB.setStatus(false);
+            incidenceService.delete(dataInDB);
+            result.put("success", true);
+            result.put("message", "Se ha eliminado los datos del registro.");
+            result.put("result", dataInDB);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+
+        } catch (Exception ex) {
+            return new ResponseEntity<>(new ApiPPPTCDException(ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @ApiOperation(value = "Lista todos los tratamientos", authorizations = {@Authorization(value = "apiKey") })
+    @GetMapping(value = "/treatment")
+    public ResponseEntity<?> findAllTreatment(
+            @RequestParam(value = "idStudent", required = false, defaultValue = "") Integer idStudent,
+            @RequestParam(value = "idSpecialist", required = false, defaultValue = "") Integer idSpecialist,
+            @RequestParam(value = "registrationDate", required = false, defaultValue = "") String registrationDate,
+            @RequestParam(value = "type", required = false, defaultValue = "grilla") String type,
+            @RequestParam(value = "query", required = false, defaultValue = "") String query,
+            @RequestParam(value = "page", required = false, defaultValue = "-1") Integer page,
+            @RequestParam(value = "limit", required = false, defaultValue = "-1") Integer limit,
+            @RequestParam(value = "sortBy", required = false, defaultValue = "") String sortBy,
+            HttpServletRequest request) {
+
+        if(type.equals("grilla")) {
+            int maxPage = 10;
+
+            if (page == -1 && limit == -1 && "".equals(sortBy)) {
+                page = 1;
+                limit = maxPage;
+            }else if (limit != -1 && page == -1) {
+                page = 1;
+            } else if (page != -1 && limit == -1) {
+                limit = maxPage;
+            }
+
+            return new ResponseEntity<>(treatmentService.findAll(idStudent, idSpecialist, registrationDate, query, page, limit, sortBy), HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(treatmentService.findAll(idStudent, idSpecialist, registrationDate, query, sortBy), HttpStatus.OK);
+        }
+    }
+
+    @ApiOperation(value = "Crea un tratamiento", authorizations = {@Authorization(value = "apiKey") })
+    @PostMapping(value = "/treatment")
+    public ResponseEntity<?> saveTreatment(@RequestBody Treatment data, HttpServletRequest request) {
+        HashMap<String, Object> response = new HashMap<>();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Integer idUser = 0;
+        if (!(auth instanceof AnonymousAuthenticationToken)) {
+            JwtUser userDetails = (JwtUser) auth.getPrincipal();
+            idUser = userDetails.getId();
+
+        } else {
+            return new ResponseEntity<>(new RestException("No Autorizado"), HttpStatus.UNAUTHORIZED);
+        }
+
+        data.setIdSpecialist(idUser);
+        data.setRegistrationDate(Date.valueOf(LocalDate.now()));
+        data.setStatus(true);
+        Treatment result = treatmentService.insert(data);
+
+
+        response.put("success", true);
+        response.put("message", "Se ha registrado correctamente.");
+        response.put("result", result);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Actualiza un tratamiento", authorizations = { @Authorization(value = "apiKey")})
+    @PutMapping(value = "/treatment")
+    public ResponseEntity<?> updateTreatment (@RequestBody Treatment data, HttpServletRequest request) {
+        HashMap<String, Object> result = new HashMap<>();
+        Treatment dataInDB = treatmentService.findById(data.getIdTreatment());
+        if(dataInDB == null) {
+            result.put("success", false);
+            result.put("message", "No existe tratamiento con código: " + data.getIdStudent());
+            return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+        }
+        try {
+            data.setStatus(true);
+            treatmentService.update(data);
+            result.put("success", true);
+            result.put("message", "Se ha actualizado los datos del registro.");
+            result.put("result", data);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+
+        } catch (Exception ex) {
+            return new ResponseEntity<>(new ApiPPPTCDException(ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @ApiOperation(value = "Elimina un tratamiento", authorizations = { @Authorization(value = "apiKey")})
+    @DeleteMapping(value = "/treatment/{idTreatment}")
+    public ResponseEntity<?> deleteTreatment (@PathVariable(value = "idTreatment") Integer idTreatment, HttpServletRequest request){
+        HashMap<String, Object> result = new HashMap<>();
+        Treatment dataInDB = treatmentService.findById(idTreatment);
+        if(dataInDB == null) {
+            result.put("success", false);
+            result.put("message", "No existe tratamiento con código: " + idTreatment);
+            return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+        }
+        try {
+            dataInDB.setStatus(false);
+            treatmentService.delete(dataInDB);
+            result.put("success", true);
+            result.put("message", "Se ha eliminado los datos del registro.");
+            result.put("result", dataInDB);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+
+        } catch (Exception ex) {
+            return new ResponseEntity<>(new ApiPPPTCDException(ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 }
