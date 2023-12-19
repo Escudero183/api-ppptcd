@@ -19,13 +19,21 @@ public class Incidence {
 
     private Integer idStudent;
 
+    private Integer idUser;
+
     private Date registrationDate;
 
     private String description;
 
+    private String titleEvidenceOne;
+
     private String evidenceOne;
 
+    private String titleEvidenceTwo;
+
     private String evidenceTwo;
+
+    private String type;
 
     private String measuresTaken;
 
