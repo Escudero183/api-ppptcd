@@ -10,10 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -30,8 +27,8 @@ public class PDFController {
     private ParameterService parameterService;
 
     @ApiOperation(value = "Muestra archivos pdf", authorizations = {@Authorization(value = "apiKey") })
-    @GetMapping("/api/v1/pdf/show/{filePath:.+}")
-    public ResponseEntity<Resource> showPdf(@PathVariable String filePath) throws IOException {
+    @GetMapping("/api/v1/pdf/show")
+    public ResponseEntity<Resource> showPdf(@RequestParam String filePath) throws IOException {
 
         String fileDirectory = parameterService.find(1).getValue();
         String fullPath = fileDirectory + filePath;
