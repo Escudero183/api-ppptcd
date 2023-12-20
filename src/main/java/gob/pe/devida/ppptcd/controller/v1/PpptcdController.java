@@ -5,6 +5,8 @@ import gob.pe.devida.ppptcd.config.exception.RestException;
 import gob.pe.devida.ppptcd.config.security.model.JwtUser;
 import gob.pe.devida.ppptcd.model.*;
 import gob.pe.devida.ppptcd.service.*;
+import gob.pe.devida.ppptcd.utils.FileUtil;
+import gob.pe.devida.ppptcd.utils.StringUtil;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +17,10 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -53,6 +57,9 @@ public class PpptcdController {
 
     @Autowired
     private TreatmentService treatmentService;
+
+    @Autowired
+    private ParameterService parameterService;
 
     @ApiOperation(value = "Lista todas las lugares de riesgo", authorizations = {@Authorization(value = "apiKey") })
     @GetMapping(value = "/risk_place")
@@ -644,27 +651,71 @@ public class PpptcdController {
     }
 
     @ApiOperation(value = "Crea una incidencia", authorizations = {@Authorization(value = "apiKey") })
-    @PostMapping(value = "/incidence")
-    public ResponseEntity<?> saveIncidence(@RequestBody Incidence data, HttpServletRequest request) {
+    @PostMapping(value = "/incidence", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> saveIncidence(
+            @RequestParam(value = "idStudent", required = false, defaultValue = "0") Integer idStudent,
+            @RequestParam(value = "description", required = false, defaultValue = "") String description,
+            @RequestParam(value = "titleEvidenceOne", required = false, defaultValue = "") String titleEvidenceOne,
+            @RequestParam(value = "titleEvidenceTwo", required = false, defaultValue = "") String titleEvidenceTwo,
+            @RequestParam(value = "type", required = false, defaultValue = "") String type,
+            @RequestParam(value = "fileEvidenceOne", required = false) MultipartFile fileEvidenceOne,
+            @RequestParam(value = "fileEvidenceTwo", required = false) MultipartFile fileEvidenceTwo,
+            HttpServletRequest request) {
         HashMap<String, Object> response = new HashMap<>();
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Integer idUser = 0;
         if (!(auth instanceof AnonymousAuthenticationToken)) {
             JwtUser userDetails = (JwtUser) auth.getPrincipal();
             idUser = userDetails.getId();
-
         } else {
             return new ResponseEntity<>(new RestException("No Autorizado"), HttpStatus.UNAUTHORIZED);
         }
 
-        data.setRegistrationDate(Date.valueOf(LocalDate.now()));
-        data.setStatus(true);
-        Incidence result = incidenceService.insert(data);
+        Incidence bean = new Incidence();
+        bean.setIdStudent(idStudent);
+        bean.setIdUser(idUser);
+        bean.setDescription(description);
+        bean.setType(type);
+        bean.setRegistrationDate(Date.valueOf(LocalDate.now()));
+        bean.setStatus(true);
 
+        incidenceService.insert(bean);
+
+        String pathRepo = parameterService.find(1).getValue();
+        String folder = "/documents/incidences/";
+
+        File folderFile = new File(pathRepo+folder);
+        if (!folderFile.exists()) {
+            folderFile.mkdirs();
+        }
+
+        FileUtil fileUtil = new FileUtil();
+        StringUtil stringUtil = new StringUtil();
+
+        if (fileEvidenceOne != null) {
+            String namefile = "INCIDENCE-" + idStudent + '-' + stringUtil.getAlphaNumeric(10);
+            String pathLogo = fileUtil.upLoadFiles(pathRepo,folder,fileEvidenceOne,namefile);
+
+            bean.setTitleEvidenceOne(titleEvidenceOne);
+            bean.setEvidenceOne(pathLogo);
+        }
+
+        if (fileEvidenceTwo != null) {
+            String namefile = "INCIDENCE-" + idStudent + '-' + stringUtil.getAlphaNumeric(10);
+            String pathLogo = fileUtil.upLoadFiles(pathRepo,folder,fileEvidenceTwo,namefile);
+
+            bean.setTitleEvidenceTwo(titleEvidenceOne);
+            bean.setEvidenceTwo(pathLogo);
+        }
+
+        if (fileEvidenceOne != null || fileEvidenceTwo != null) {
+            incidenceService.update(bean);
+        }
 
         response.put("success", true);
         response.put("message", "Se ha registrado correctamente.");
-        response.put("result", result);
+        response.put("result", bean);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
