@@ -30,7 +30,7 @@ public class PDFController {
     private ParameterService parameterService;
 
     @ApiOperation(value = "Muestra archivos pdf", authorizations = {@Authorization(value = "apiKey") })
-    @GetMapping("/api/v1/pdf/show/**")
+    @GetMapping("/api/v1/pdf/show/{filePath:.+}")
     public ResponseEntity<Resource> showPdf(@PathVariable String filePath) throws IOException {
 
         String fileDirectory = parameterService.find(1).getValue();
