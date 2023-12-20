@@ -1,6 +1,8 @@
 package gob.pe.devida.ppptcd.controller.v1;
 
 import gob.pe.devida.ppptcd.service.ParameterService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -27,6 +29,7 @@ public class PDFController {
     @Autowired
     private ParameterService parameterService;
 
+    @ApiOperation(value = "Muestra archivos pdf", authorizations = {@Authorization(value = "apiKey") })
     @GetMapping("/api/v1/pdf/show/**")
     public ResponseEntity<Resource> showPdf(@PathVariable String filePath) throws IOException {
 
