@@ -26,7 +26,7 @@ public class PDFController {
     @Autowired
     private ParameterService parameterService;
 
-    @ApiOperation(value = "Muestra archivos pdf", authorizations = {@Authorization(value = "apiKey") })
+    @ApiOperation(value = "Muestra archivos pdf"/*, authorizations = {@Authorization(value = "apiKey") }*/)
     @GetMapping("/api/v1/pdf/show")
     public ResponseEntity<Resource> showPdf(@RequestParam String filePath) throws IOException {
 

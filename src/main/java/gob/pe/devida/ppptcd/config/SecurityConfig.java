@@ -66,6 +66,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/webjars/**").permitAll()
                 .antMatchers("/resources/**").permitAll()
                 .antMatchers("/api/v1/multimedia/**").permitAll()
+                .antMatchers("/api/v1/pdf/**").permitAll()
                 .antMatchers("/api/**")
                 .authenticated();
 
