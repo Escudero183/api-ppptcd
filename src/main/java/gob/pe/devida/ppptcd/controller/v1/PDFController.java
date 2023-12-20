@@ -27,7 +27,7 @@ public class PDFController {
     @Autowired
     private ParameterService parameterService;
 
-    @GetMapping("/app/ppptcd/showPdf/{filePath}")
+    @GetMapping("/api/v1/ppptcd/showPdf/{filePath}")
     public ResponseEntity<Resource> showPdf(@PathVariable String filePath) throws IOException {
 
         String fileDirectory = parameterService.find(1).getValue();
