@@ -47,7 +47,7 @@ public class StudentService {
         return studentRepository.findAll(idEducationalInstitution, stateEvolution, sex, "%" + query.toLowerCase() + "%", sort);
     }
 
-    public HashMap<String, Object> findAll(Integer idEducationalInstitution, String stateEvolution, String sex, String query, int page, int limit, String sortBy) {
+    public HashMap<String, Object> findAll(List<Integer> idEducationalInstitution, String stateEvolution, String sex, String query, int page, int limit, String sortBy) {
         HashMap<String, Object> result = new HashMap<String, Object>();
         Pageable pageable;
         if (!sortBy.equals("")) {

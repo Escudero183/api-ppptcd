@@ -23,7 +23,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * File created by Linygn Escudero$ on 24/10/2023$
@@ -520,7 +523,7 @@ public class PpptcdController {
     @ApiOperation(value = "Lista todos los estudiantes aplicando filtros", authorizations = {@Authorization(value = "apiKey") })
     @GetMapping(value = "/student")
     public ResponseEntity<?> findAllStudent(
-            @RequestParam(value = "idEducationalInstitution", required = false, defaultValue = "") Integer idEducationalInstitution,
+            @RequestParam(value = "idEducationalInstitution", required = false, defaultValue = "-1") String idEducationalInstitution,
             @RequestParam(value = "stateEvolution", required = false, defaultValue = "") String stateEvolution,
             @RequestParam(value = "sex", required = false, defaultValue = "") String sex,
             @RequestParam(value = "type", required = false, defaultValue = "grilla") String type,
@@ -542,9 +545,10 @@ public class PpptcdController {
                 limit = maxPage;
             }
 
-            return new ResponseEntity<>(studentService.findAll(idEducationalInstitution, stateEvolution, sex, query, page, limit, sortBy), HttpStatus.OK);
+            List<Integer> idsEI = Arrays.asList(idEducationalInstitution.split(",")).stream().map(s -> Integer.parseInt(s.trim())).collect(Collectors.toList());
+            return new ResponseEntity<>(studentService.findAll(idsEI, stateEvolution, sex, query, page, limit, sortBy), HttpStatus.OK);
         }else {
-            return new ResponseEntity<>(studentService.findAll(idEducationalInstitution, stateEvolution, sex, query, sortBy), HttpStatus.OK);
+            return new ResponseEntity<>(studentService.findAll(Integer.parseInt(idEducationalInstitution), stateEvolution, sex, query, sortBy), HttpStatus.OK);
         }
     }
 

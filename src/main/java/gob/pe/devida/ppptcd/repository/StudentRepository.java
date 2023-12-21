@@ -16,8 +16,8 @@ import java.util.List;
  */
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Integer> {
-    @Query("select t from Student t Where t.status = true and (:idEducationalInstitution = -1 or (:idEducationalInstitution != -1 and (t.educationalInstitution.idEducationalInstitution = :idEducationalInstitution))) and (:stateEvolution = '' or (:stateEvolution != '' and t.stateEvolution = :stateEvolution)) and (:sex = '' or (:sex != '' and t.sex = :sex)) and (lower(t.firstName) like :query or lower(t.lastNameOne) like :query or lower(t.lastNameTwo) like :query)")
-    public Page<Student> findAllParams(Integer idEducationalInstitution, String stateEvolution, String sex, String query, Pageable pageable);
+    @Query("select t from Student t Where t.status = true and (-1 in (:idEducationalInstitution) or (-1 not in (:idEducationalInstitution) and (t.educationalInstitution.idEducationalInstitution in (:idEducationalInstitution)))) and (:stateEvolution = '' or (:stateEvolution != '' and t.stateEvolution = :stateEvolution)) and (:sex = '' or (:sex != '' and t.sex = :sex)) and (lower(t.firstName) like :query or lower(t.lastNameOne) like :query or lower(t.lastNameTwo) like :query)")
+    public Page<Student> findAllParams(List<Integer> idEducationalInstitution, String stateEvolution, String sex, String query, Pageable pageable);
 
     @Query("select t from Student t Where t.status = true and (:idEducationalInstitution = -1 or (:idEducationalInstitution != -1 and (t.educationalInstitution.idEducationalInstitution = :idEducationalInstitution))) and (:stateEvolution = '' or (:stateEvolution != '' and t.stateEvolution = :stateEvolution)) and (:sex = '' or (:sex != '' and t.sex = :sex)) and (lower(t.firstName) like :query or lower(t.lastNameOne) like :query or lower(t.lastNameTwo) like :query)")
     public List<Student> findAll(Integer idEducationalInstitution, String stateEvolution, String sex, String query);
