@@ -826,6 +826,7 @@ public class PpptcdController {
         bean.setAdmissionReason(admissionReason);
         bean.setDiagnosis(diagnosis);
         bean.setTreatmentSummary(treatmentSummary);
+        bean.setRegistrationDate(Date.valueOf(LocalDate.now()));
         bean.setStatus(true);
 
         treatmentService.insert(bean);
