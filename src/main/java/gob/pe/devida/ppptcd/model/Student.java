@@ -22,7 +22,7 @@ public class Student {
 
     private Integer idUserReport;
 
-    private Integer idEducationalInstitution;
+    // private Integer idEducationalInstitution;
 
     private String firstName;
 
@@ -74,6 +74,10 @@ public class Student {
     @ManyToOne
     @JoinColumn(name = "idEducationalInstitutionDirectory")
     private EducationalInstitutionDirectory tutor;
+
+    @ManyToOne
+    @JoinColumn(name = "idEducationalInstitution")
+    private EducationalInstitution educationalInstitution;
 
     @OneToMany(mappedBy = "idStudent")
     @Where(clause = "status = true")

@@ -56,5 +56,6 @@ gob/pe/devida/ppptcd/repository/StudentRepository.class
 gob/pe/devida/ppptcd/repository/TreatmentRepository.class
 gob/pe/devida/ppptcd/repository/UserRepository.class
 gob/pe/devida/ppptcd/filter/JwtAuthenticationEntryPoint.class
+gob/pe/devida/ppptcd/controller/v1/PDFController.class
 gob/pe/devida/ppptcd/repository/UbigeoRepository.class
 gob/pe/devida/ppptcd/model/Ubigeo.class
