@@ -801,8 +801,14 @@ public class PpptcdController {
     }
 
     @ApiOperation(value = "Crea un tratamiento", authorizations = {@Authorization(value = "apiKey") })
-    @PostMapping(value = "/treatment")
-    public ResponseEntity<?> saveTreatment(@RequestBody Treatment data, HttpServletRequest request) {
+    @PostMapping(value = "/treatment", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> saveTreatment(
+            @RequestParam(value = "idStudent", required = false, defaultValue = "0") Integer idStudent,
+            @RequestParam(value = "admissionReason", required = false, defaultValue = "") String admissionReason,
+            @RequestParam(value = "diagnosis", required = false, defaultValue = "") String diagnosis,
+            @RequestParam(value = "treatmentSummary", required = false, defaultValue = "") String treatmentSummary,
+            @RequestParam(value = "fileArchive", required = false) MultipartFile fileArchive,
+            HttpServletRequest request) {
         HashMap<String, Object> response = new HashMap<>();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Integer idUser = 0;
@@ -814,15 +820,38 @@ public class PpptcdController {
             return new ResponseEntity<>(new RestException("No Autorizado"), HttpStatus.UNAUTHORIZED);
         }
 
-        data.setIdSpecialist(idUser);
-        data.setRegistrationDate(Date.valueOf(LocalDate.now()));
-        data.setStatus(true);
-        Treatment result = treatmentService.insert(data);
+        Treatment bean = new Treatment();
+        bean.setIdStudent(idStudent);
+        bean.setIdSpecialist(idUser);
+        bean.setAdmissionReason(admissionReason);
+        bean.setDiagnosis(diagnosis);
+        bean.setTreatmentSummary(treatmentSummary);
+        bean.setStatus(true);
 
+        treatmentService.insert(bean);
+
+        String pathRepo = parameterService.find(1).getValue();
+        String folder = "/documents/treatments/";
+
+        File folderFile = new File(pathRepo+folder);
+        if (!folderFile.exists()) {
+            folderFile.mkdirs();
+        }
+
+        FileUtil fileUtil = new FileUtil();
+        StringUtil stringUtil = new StringUtil();
+
+        if (fileArchive != null) {
+            String namefile = "TREATMENT-" + idStudent + '-' + stringUtil.getAlphaNumeric(10);
+            String pathLogo = fileUtil.upLoadFiles(pathRepo,folder,fileArchive,namefile);
+
+            bean.setArchive(pathLogo);
+            treatmentService.update(bean);
+        }
 
         response.put("success", true);
         response.put("message", "Se ha registrado correctamente.");
-        response.put("result", result);
+        response.put("result", bean);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
