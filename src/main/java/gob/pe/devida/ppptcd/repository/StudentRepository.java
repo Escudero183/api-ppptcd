@@ -24,4 +24,7 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
 
     @Query("select t from Student t Where t.status = true and (:idEducationalInstitution = -1 or (:idEducationalInstitution != -1 and (t.educationalInstitution.idEducationalInstitution = :idEducationalInstitution))) and (:stateEvolution = '' or (:stateEvolution != '' and t.stateEvolution = :stateEvolution)) and (:sex = '' or (:sex != '' and t.sex = :sex)) and (lower(t.firstName) like :query or lower(t.lastNameOne) like :query or lower(t.lastNameTwo) like :query)")
     public List<Student> findAll(Integer idEducationalInstitution, String stateEvolution, String sex, String query, Sort sort);
+
+    @Query("select count(t) from Student t where t.status = true")
+    Integer countByStatusTrue();
 }

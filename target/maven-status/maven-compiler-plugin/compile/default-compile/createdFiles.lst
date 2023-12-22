@@ -29,6 +29,7 @@ gob/pe/devida/ppptcd/service/EducationalInstitutionService.class
 gob/pe/devida/ppptcd/config/security/model/JwtAuthenticationRequest.class
 gob/pe/devida/ppptcd/model/Incidence.class
 gob/pe/devida/ppptcd/service/UserService.class
+gob/pe/devida/ppptcd/controller/v1/ReportController.class
 gob/pe/devida/ppptcd/controller/v1/PpptcdController.class
 gob/pe/devida/ppptcd/repository/TypeRiskPlaceRepository.class
 gob/pe/devida/ppptcd/model/EducationalInstitutionDirectory.class

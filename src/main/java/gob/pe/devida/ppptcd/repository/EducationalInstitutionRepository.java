@@ -25,4 +25,7 @@ public interface EducationalInstitutionRepository extends JpaRepository<Educatio
 
     @Query("select t from EducationalInstitution t Where t.status = true and (lower(t.modularCode) like :query or lower(t.name) like :query)")
     public List<EducationalInstitution> findAll(String query, Sort sort);
+
+    @Query("select count(t) from EducationalInstitution t where t.status = true")
+    Integer countByStatusTrue();
 }

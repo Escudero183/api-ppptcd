@@ -24,4 +24,7 @@ public interface TreatmentRepository extends JpaRepository<Treatment, Integer> {
 
     @Query("select t from Treatment t Where t.status = true and (:idStudent = -1 or (:idStudent != -1 and t.idStudent = :idStudent)) and (:idSpecialist = -1 or (:idSpecialist != -1 and t.idSpecialist = :idSpecialist)) and (:registrationDate = '' or (:registrationDate != '' and date(t.registrationDate) = date(:registrationDate))) and (lower(t.admissionReason) like :query or lower(t.diagnosis) like :query)")
     public List<Treatment> findAll(Integer idStudent, Integer idSpecialist, String registrationDate, String query, Sort sort);
+
+    @Query("select count(t) from Treatment t where t.status = true")
+    Integer countByStatusTrue();
 }

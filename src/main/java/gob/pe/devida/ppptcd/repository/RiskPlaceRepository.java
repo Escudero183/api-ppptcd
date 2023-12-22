@@ -24,4 +24,7 @@ public interface RiskPlaceRepository extends JpaRepository<RiskPlace, Integer> {
 
     @Query("select t from RiskPlace t Where t.status = true and (:registrationStatus = '' or (:registrationStatus != '' and (t.registrationStatus=:registrationStatus))) and (lower(t.name) like :query or lower(t.address) like :query)")
     public List<RiskPlace> findAll(String query, String registrationStatus, Sort sort);
+
+    @Query("select count(t) from RiskPlace t where t.status = true")
+    Integer countByStatusTrue();
 }

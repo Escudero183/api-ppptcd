@@ -25,4 +25,7 @@ public interface InstitutionDirectoryRepository extends JpaRepository<Institutio
 
     @Query("select t from InstitutionDirectory t Where t.status = true and (:idInstitution = -1 or (:idInstitution != -1 and (t.idInstitution = :idInstitution))) and (lower(t.firstName) like :query or lower(t.lastNameOne) like :query or lower(t.lastNameTwo) like :query)")
     public List<InstitutionDirectory> findAll(Integer idInstitution, String query, Sort sort);
+
+    @Query("select count(t) from InstitutionDirectory t where t.status = true")
+    Integer countByStatusTrue();
 }
