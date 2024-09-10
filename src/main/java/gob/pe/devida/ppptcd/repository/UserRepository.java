@@ -2,6 +2,8 @@ package gob.pe.devida.ppptcd.repository;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import gob.pe.devida.ppptcd.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -34,6 +36,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("select u from User u where u.status = true and idUser in(:users)")
 	public List<User> findAll(List<Integer> users);
 
+    @Transactional
     @Modifying
     @Query("update User u set u.password=:password Where u.idUser=:idUser")
     public void resetPassword(Integer idUser, String password);
