@@ -37,4 +37,8 @@ public class User {
     private String display;
 
     private boolean status;
+    
+    /*@ManyToOne
+    @JoinColumn(name = "id_profile")
+    private Profile profile;*/
 }
