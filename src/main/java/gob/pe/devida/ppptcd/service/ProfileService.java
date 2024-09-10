@@ -30,7 +30,7 @@ public class ProfileService {
     }
 
     public void delete (Profile item) {
-    	profileRepository.delete(item);
+    	profileRepository.save(item);
     }
 
     public Profile findById(Integer idUser) {

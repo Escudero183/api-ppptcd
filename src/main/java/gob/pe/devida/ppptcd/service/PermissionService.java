@@ -23,7 +23,7 @@ public class PermissionService {
     }
 
     public void delete (Permission item) {
-    	permissionRepository.delete(item);
+    	permissionRepository.save(item);
     }
 
     public Permission findById(Integer idUser) {

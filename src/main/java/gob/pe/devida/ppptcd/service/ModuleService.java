@@ -30,7 +30,7 @@ public class ModuleService {
     }
 
     public void delete (Module item) {
-    	moduleRepository.delete(item);
+    	moduleRepository.save(item);
     }
 
     public Module findById(Integer idUser) {

@@ -34,7 +34,7 @@ public class UserService {
     }
 
     public void delete (User item) {
-        userRepository.delete(item);
+        userRepository.save(item);
     }
 
     public User findByLogin(String login) {
