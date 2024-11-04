@@ -24,7 +24,7 @@ public interface ModuleRepository extends JpaRepository<Module, Integer> {
     @Query("select t from Module t Where t.status = true and lower(t.name) like :query")
     public List<Module> findAll(String query);
     
-    @Query("select t from Module t Where t.status = true and (:idModuleParent = -1 or (:idModuleParent != -1 and t.idModuleParent = :idModuleParent))")
+    @Query("select t from Module t Where t.status = true and t.idModuleParent = :idModuleParent order by t.order asc")
     public List<Module> findModuleParent(Integer idModuleParent);
 
     @Query("select t from Module t Where t.status = true and lower(t.name) like :query")

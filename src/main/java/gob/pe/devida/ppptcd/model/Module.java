@@ -1,11 +1,14 @@
 package gob.pe.devida.ppptcd.model;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import lombok.Data;
 
@@ -27,7 +30,15 @@ public class Module {
     private String path;
     
     private Integer idModuleParent;
+    
+    private Integer order;
 
     private boolean status;
+    
+    @Transient
+    private List<Module> subModules;
+    
+    @Transient
+    private Boolean permission;
 
 }

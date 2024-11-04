@@ -12,14 +12,20 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import gob.pe.devida.ppptcd.model.EducationalInstitution;
 import gob.pe.devida.ppptcd.model.Module;
+import gob.pe.devida.ppptcd.model.Permission;
 import gob.pe.devida.ppptcd.repository.ModuleRepository;
+import gob.pe.devida.ppptcd.repository.PermissionRepository;
 
 @Service
 public class ModuleService {
 	
 	@Autowired
 	private ModuleRepository moduleRepository;
+	
+	@Autowired
+	private PermissionRepository permissionRepository;
 	
 	public Module insert(Module item) {
         return moduleRepository.save(item);
@@ -39,6 +45,36 @@ public class ModuleService {
     
     public List<Module> findModuleParent(Integer idModuleParent) {
         return moduleRepository.findModuleParent(idModuleParent);
+    }
+    
+    public List<Module> listModules(Integer idProfile) {
+        List<Module> parents = moduleRepository.findModuleParent(0);
+
+        for (Module parent : parents) {
+            List<Module> subModules = getSubModulesWithPermissions(idProfile, parent.getIdModule());
+            parent.setSubModules(subModules);
+            
+            if (idProfile != -1) {
+                parent.setPermission(hasPermission(idProfile, parent.getIdModule()));
+            }
+        }
+        return parents;
+    }
+
+    private List<Module> getSubModulesWithPermissions(Integer idProfile, Integer parentModuleId) {
+        List<Module> subModules = moduleRepository.findModuleParent(parentModuleId);
+
+        if (idProfile != -1) {
+            for (Module subModule : subModules) {
+                subModule.setPermission(hasPermission(idProfile, subModule.getIdModule()));
+            }
+        }
+        return subModules;
+    }
+
+    private boolean hasPermission(Integer idProfile, Integer moduleId) {
+        List<Permission> permissions = permissionRepository.findByProfileAndModule(idProfile, moduleId);
+        return !permissions.isEmpty();
     }
     
     public List<Module> findAll() {

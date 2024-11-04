@@ -307,12 +307,17 @@ public class SecurityController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
+	@ApiOperation(value = "Lista todos los Módulos asociados a sus submódulos", authorizations = {@Authorization(value = "apiKey") })
+	@GetMapping(value = "/module/list")	
+	public ResponseEntity<?> listModule(
+			@RequestParam(value = "idProfile", required = false, defaultValue = "-1") Integer idProfile,
+			HttpServletRequest request) {
+		return new ResponseEntity<>(moduleService.listModules(idProfile), HttpStatus.OK);
+	}
+	
 	@ApiOperation(value = "Lista Módulos padres o submodulos de un padre", authorizations = {@Authorization(value = "apiKey") })
 	@GetMapping(value = "/module/{idModuleParent}")	
 	public ResponseEntity<?> findModuleParent(@PathVariable(value = "idModuleParent") Integer idModuleParent, HttpServletRequest request) {
-		if (idModuleParent == null) {
-			idModuleParent = -1;
-		}
 		return new ResponseEntity<>(moduleService.findModuleParent(idModuleParent), HttpStatus.OK);
 	}
 	

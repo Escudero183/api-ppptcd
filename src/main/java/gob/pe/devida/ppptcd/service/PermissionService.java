@@ -39,7 +39,13 @@ public class PermissionService {
     }
     
     public Permission findByProfileAndModule(Integer idProfile, Integer idModule) {
-        return permissionRepository.findByProfileAndModule(idProfile, idModule).get(0);
+    	List<Permission> permissions = permissionRepository.findByProfileAndModule(idProfile, idModule);
+        
+        if (permissions.isEmpty()) {
+            return null;
+        }
+        
+        return permissions.get(0);
     }
 
 }
