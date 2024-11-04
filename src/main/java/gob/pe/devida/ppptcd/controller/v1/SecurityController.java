@@ -316,7 +316,7 @@ public class SecurityController {
 	}
 	
 	@ApiOperation(value = "Lista Módulos padres o submodulos de un padre", authorizations = {@Authorization(value = "apiKey") })
-	@GetMapping(value = "/module/{idModuleParent}")	
+	@GetMapping(value = "/module/parent/{idModuleParent}")	
 	public ResponseEntity<?> findModuleParent(@PathVariable(value = "idModuleParent") Integer idModuleParent, HttpServletRequest request) {
 		return new ResponseEntity<>(moduleService.findModuleParent(idModuleParent), HttpStatus.OK);
 	}
