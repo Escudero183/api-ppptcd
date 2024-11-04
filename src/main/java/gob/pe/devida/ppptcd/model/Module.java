@@ -32,6 +32,8 @@ public class Module {
     private Integer idModuleParent;
     
     private Integer orderIndex;
+    
+    private String icon;
 
     private boolean status;
     
