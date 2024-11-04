@@ -27,7 +27,7 @@ public interface PermissionRepository extends JpaRepository<Permission, Integer>
     @Query("select t from Permission t Where t.status = true and t.idProfile = :idProfile")
     public List<Permission> findByProfile(Integer idProfile);
     
-    @Query("select t from Permission t Where t.idProfile = :idProfile and t.idModule = :idModule")
+    @Query("select t from Permission t Where t.status = true and t.idProfile = :idProfile and t.idModule = :idModule")
     public List<Permission> findByProfileAndModule(Integer idProfile, Integer idModule);
 
     @Query("select t from Permission t Where t.status = true")
