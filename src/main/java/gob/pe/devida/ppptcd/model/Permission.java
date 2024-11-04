@@ -30,6 +30,6 @@ public class Permission {
     
     private Date createdAt;
 
-    private boolean status;
+    private Boolean status;
 
 }

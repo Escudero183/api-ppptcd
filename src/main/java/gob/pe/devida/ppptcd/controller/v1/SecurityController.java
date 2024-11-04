@@ -418,7 +418,7 @@ public class SecurityController {
 			permission.setIdPermission(isExist.getIdPermission());
 		}
 		
-		permission.setStatus(true);
+		permission.setStatus(permission.getStatus());
 		permission.setCreatedAt(Date.valueOf(LocalDate.now()));
 		Permission data = permissionService.insert(permission);
 		
