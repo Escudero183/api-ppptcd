@@ -31,7 +31,7 @@ public class Module {
     
     private Integer idModuleParent;
     
-    private Integer order;
+    private Integer orderIndex;
 
     private boolean status;
     
