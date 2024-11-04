@@ -39,7 +39,7 @@ public class AuthService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException(String.format("No existe el usuario '%s'.", username));
         } else {
-            String perfil = "PERFIL"; // user.getIdProfile().toString();
+            String perfil = user.getIdProfile().toString(); // user.getIdProfile().toString();
 
             List<GrantedAuthority> authorities = new ArrayList<>();
             authorities.add(new SimpleGrantedAuthority(perfil));
